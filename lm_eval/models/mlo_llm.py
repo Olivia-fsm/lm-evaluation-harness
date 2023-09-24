@@ -137,9 +137,14 @@ class MLOLM(BaseLM):
         logits returned from the model
         """
         with torch.no_grad():
-            return self.model(inps[:, :-1],
-                              targets=[:, 1:],
-                              get_logits=True)["logits"]
+            if len(inps.shape)<2:
+                return self.model(inps[:-1],
+                                targets=inps[1:],
+                                get_logits=True)["logits"]
+            else:
+                return self.model(inps[:, :-1],
+                                targets=inps[:, 1:],
+                                get_logits=True)["logits"]
 
     def _model_generate(self, context, max_length,):
         if type(context)==str:
