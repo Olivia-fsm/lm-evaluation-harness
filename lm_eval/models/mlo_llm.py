@@ -65,7 +65,7 @@ class MLOLM(BaseLM):
         print(f"Using device '{device}'")
         self.tokenizer = tiktoken.get_encoding("gpt2")
         self.config = ModelConf(config=config)
-        self.model_path = self.config.model_path
+        self.model_path = self.config.ckpt_path
         
         # Initialize new model and tokenizer instances
         self.model = load_checkpoint(checkpoint_path=self.model_path,
