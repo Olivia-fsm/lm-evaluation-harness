@@ -2,7 +2,7 @@ import torch
 import transformers
 from typing import Optional, Union
 from lm_eval.base import BaseLM
-from models.base_mlo import GPTBase
+from .base_mlo import GPTBase
 import tiktoken
 
 
