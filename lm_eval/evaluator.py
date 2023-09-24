@@ -27,6 +27,7 @@ mlo_lm_config_dict = {
     'bias': 'false',
     'dataset': 'full_redpajama-all',
     'eval_all_domains': False,
+    'ckpt_path': None,
 }
 
 # TODO: add support for MLOLM customization
@@ -89,6 +90,8 @@ def simple_evaluate(
     if isinstance(model, str):
         if model=='mlo':
             mlo_lm_args = AttributeDict(mlo_lm_config_dict)
+            if mlo_lm_args.ckpt_path is None:
+                mlo_lm_args.ckpt_path = model_args.ckpt_path
             lm = lm_eval.models.get_model(model)(
                 config=mlo_lm_args,
                 batch_size=batch_size,

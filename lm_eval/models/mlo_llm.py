@@ -24,6 +24,7 @@ class ModelConf:
         self.n_embd = config['n_embd']
         self.sequence_length = config['sequence_length']
         self.bias = config['bias']
+        self.ckpt_path=config['ckpt_path']
         
 def load_checkpoint(checkpoint_path, 
                     model_config:ModelConf, 
@@ -50,7 +51,6 @@ class MLOLM(BaseLM):
         self,
         device="cuda",
         config=None,
-        model_path=None,
         low_cpu_mem_usage=None,
         subfolder=None,
         batch_size=1,
@@ -65,9 +65,10 @@ class MLOLM(BaseLM):
         print(f"Using device '{device}'")
         self.tokenizer = tiktoken.get_encoding("gpt2")
         self.config = ModelConf(config=config)
+        self.model_path = self.config.model_path
         
         # Initialize new model and tokenizer instances
-        self.model = load_checkpoint(checkpoint_path=model_path,
+        self.model = load_checkpoint(checkpoint_path=self.model_path,
                                      model_config=config,
                                      device=self.device,
                                      train=False,)
