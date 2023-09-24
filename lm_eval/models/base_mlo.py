@@ -192,12 +192,12 @@ class GPTBase(nn.Module):
             # if we are given some desired targets also calculate the loss
             logits = self.lm_head(x)
             if return_token_loss:
-                token_loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=self.ignore_index, reduction='none') # shape (b, t)
+                token_loss = F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1), ignore_index=self.ignore_index, reduction='none') # shape (b, t)
                 token_mask = targets.ne(self.ignore_index).float()
                 loss = token_loss.sum() / token_mask.sum()
                 # loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1, reduction=loss_reduction)
             else:
-                loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=self.ignore_index, reduction='mean')
+                loss = F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1), ignore_index=self.ignore_index, reduction='mean')
         else:
             # inference-time mini-optimization: only forward the lm_head on the very last position
             logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
