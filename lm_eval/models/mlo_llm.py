@@ -76,7 +76,7 @@ class MLOLM(BaseLM):
         self.vocab_size = self.tokenizer.n_vocab
 
         # Validate batch_size
-        assert isinstance(batch_size, (int, str))
+        assert type(batch_size)==str or type(batch_size)==int, f"batch_size must be str or int but got {type(batch_size)}"
 
         # setup for automatic batch size detection
         if str(batch_size).startswith("auto"):
