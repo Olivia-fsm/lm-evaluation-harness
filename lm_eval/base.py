@@ -454,8 +454,14 @@ class BaseLM(LM):
             max_gen_tokens = min(
                 self.max_gen_toks, request_args.get("max_length", self.max_gen_toks)
             )
+            
+            # cont = self._model_generate(
+            #     context_enc, context_enc.shape[1] + max_gen_tokens, primary_until
+            # )
+            
+            # customize for MLOLM
             cont = self._model_generate(
-                context_enc, context_enc.shape[1] + max_gen_tokens, primary_until
+                context_enc, context_enc.shape[1] + max_gen_tokens
             )
 
             s = self.tok_decode(cont[0].tolist()[context_enc.shape[1] :])
