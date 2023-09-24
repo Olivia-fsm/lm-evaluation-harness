@@ -65,7 +65,8 @@ def main():
     if args.description_dict_path:
         with open(args.description_dict_path, "r") as f:
             description_dict = json.load(f)
-
+            
+    # TODO: add mlo_lm customizations
     results = evaluator.simple_evaluate(
         model=args.model,
         model_args=args.model_args,

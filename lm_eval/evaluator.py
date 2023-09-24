@@ -8,11 +8,28 @@ import lm_eval.tasks
 import lm_eval.base
 from lm_eval.utils import positional_deprecated, run_task_tests
 from lm_eval.models.gpt2 import HFLM
-
+from lm_eval.models.mlo_llm import MLOLM
 import numpy as np
 import transformers
 
+class AttributeDict(dict):
+    __getattr__ = dict.__getitem__
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+    
+mlo_lm_config_dict = {
+    'vocab_size': 50304,
+    'dropout': 0.0,
+    'n_head': 12,
+    'n_embd': 768,
+    'sequence_length': 512,
+    'n_layer': 12,
+    'bias': 'false',
+    'dataset': 'full_redpajama-all',
+    'eval_all_domains': False,
+}
 
+# TODO: add support for MLOLM customization
 @positional_deprecated
 def simple_evaluate(
     model,
@@ -69,18 +86,27 @@ def simple_evaluate(
     np.random.seed(1234)
 
     assert tasks != [], "No tasks specified"
-
     if isinstance(model, str):
-        if model_args is None:
-            model_args = ""
-        lm = lm_eval.models.get_model(model).create_from_arg_string(
-            model_args,
-            {
-                "batch_size": batch_size,
-                "max_batch_size": max_batch_size,
-                "device": device,
-            },
-        )
+        if model=='mlo':
+            mlo_lm_args = AttributeDict(mlo_lm_config_dict)
+            lm = lm_eval.models.get_model(model)(
+                config=mlo_lm_args,
+                batch_size=batch_size,
+                max_batch_size=max_batch_size,
+                device=device,
+            )
+            no_cache = True
+        else:
+            if model_args is None:
+                model_args = ""
+            lm = lm_eval.models.get_model(model).create_from_arg_string(
+                model_args,
+                {
+                    "batch_size": batch_size,
+                    "max_batch_size": max_batch_size,
+                    "device": device,
+                },
+            )
     elif isinstance(model, transformers.PreTrainedModel):
         lm = lm_eval.models.get_model("hf-causal")(
             pretrained=model,
@@ -309,6 +335,8 @@ def evaluate(
         #       they should end up next to each other.
 
         print("Running", reqtype, "requests")
+        
+        # TODO: check command
         resps = getattr(lm, reqtype)([req.args for req in reqs])
         resps = [
             x if req.index is None else x[req.index] for x, req in zip(resps, reqs)
