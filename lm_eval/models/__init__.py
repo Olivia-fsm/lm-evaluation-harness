@@ -16,7 +16,7 @@ MODEL_REGISTRY = {
     "anthropic": anthropic_llms.AnthropicLM,
     "textsynth": textsynth.TextSynthLM,
     "dummy": dummy.DummyLM,
-    "mlo-llm": mlo_llm.MLOLM,
+    "mlo": mlo_llm.MLOLM,
 }
 
 
