@@ -48,6 +48,7 @@ def simple_evaluate(
     decontamination_ngrams_path=None,
     write_out=False,
     output_base_path=None,
+    ckpt_path=None,
 ):
     """Instantiate and evaluate a model on a list of tasks.
 
@@ -90,8 +91,8 @@ def simple_evaluate(
     if isinstance(model, str):
         if model=='mlo':
             mlo_lm_args = AttributeDict(mlo_lm_config_dict)
-            if mlo_lm_args.ckpt_path is None:
-                mlo_lm_args.ckpt_path = model_args.ckpt_path
+            assert ckpt_path is not None, "specify ckpt_path for MLO_LLM!"
+            mlo_lm_args.ckpt_path = ckpt_path
             lm = lm_eval.models.get_model(model)(
                 config=mlo_lm_args,
                 batch_size=batch_size,

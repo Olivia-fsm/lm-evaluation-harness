@@ -25,6 +25,7 @@ def parse_args():
         help="Maximal batch size to try with --batch_size auto",
     )
     parser.add_argument("--device", type=str, default=None)
+    parser.add_argument("--ckpt_path", type=str, default=None)
     parser.add_argument("--output_path", default=None)
     parser.add_argument(
         "--limit",
@@ -82,6 +83,7 @@ def main():
         check_integrity=args.check_integrity,
         write_out=args.write_out,
         output_base_path=args.output_base_path,
+        ckpt_path=args.ckpt_path,
     )
 
     dumped = json.dumps(results, indent=2)
