@@ -393,12 +393,16 @@ class BaseLM(LM):
 
                 # Obtain log-probs at the corresponding continuation token indices
                 # last_token_slice = logits[:, -1, :].squeeze(0).tolist()
-                logits = torch.gather(logits, 2, cont_toks.unsqueeze(-1)).squeeze(
-                    -1
-                )  # [1, seq]
+                try:
+                    logits = torch.gather(logits, 2, cont_toks.unsqueeze(-1)).squeeze(
+                        -1
+                    )  # [1, seq]
+                    log_prob = float(logits.sum())
+                except:
+                    log_prob = 0.0
 
                 # Answer: (log prob, is-exact-match)
-                answer = (float(logits.sum()), bool(max_equal))
+                answer = (log_prob, bool(max_equal))
 
                 # partial caching
                 if cache_key is not None:
