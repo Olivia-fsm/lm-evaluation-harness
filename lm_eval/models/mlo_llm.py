@@ -71,7 +71,7 @@ class MLOLM(BaseLM):
         self.model = load_checkpoint(checkpoint_path=self.model_path,
                                      model_config=config,
                                      device=self.device,
-                                     train=False,)
+                                     train=False,).to('cuda')
 
         self.vocab_size = self.tokenizer.n_vocab
 
