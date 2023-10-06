@@ -123,7 +123,7 @@ class MLOLM(BaseLM):
         return self._device
 
     def tok_encode(self, string: str):
-        return self.tokenizer.encode(string, allowed_special='all')
+        return self.tokenizer.encode(string, allowed_special={"<|endoftext|>"})
 
     def tok_decode(self, tokens):
         return self.tokenizer.decode(tokens)
@@ -151,7 +151,7 @@ class MLOLM(BaseLM):
             context = self.tok_encode(context)
         generation_kwargs = {"max_new_tokens": max_length}
         gen_ids = self.model.generate(context, **generation_kwargs)
-        return gen_ids
+        return self.tokenizer.decode(gen_ids)
 
 
 # for backwards compatibility
