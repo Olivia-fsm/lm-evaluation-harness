@@ -49,6 +49,7 @@ def simple_evaluate(
     write_out=False,
     output_base_path=None,
     ckpt_path=None,
+    mlo_layers=12,
 ):
     """Instantiate and evaluate a model on a list of tasks.
 
@@ -90,6 +91,7 @@ def simple_evaluate(
     assert tasks != [], "No tasks specified"
     if isinstance(model, str):
         if model=='mlo':
+            mlo_lm_config_dict['n_layer']=mlo_layers
             mlo_lm_args = AttributeDict(mlo_lm_config_dict)
             assert ckpt_path is not None, "specify ckpt_path for MLO_LLM!"
             mlo_lm_args.ckpt_path = ckpt_path
