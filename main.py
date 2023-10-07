@@ -17,6 +17,7 @@ def parse_args():
     )
     parser.add_argument("--provide_description", action="store_true")
     parser.add_argument("--num_fewshot", type=int, default=0)
+    parser.add_argument("--mlo_layers", type=int, default=12)
     parser.add_argument("--batch_size", type=str, default=None)
     parser.add_argument(
         "--max_batch_size",
@@ -84,6 +85,7 @@ def main():
         write_out=args.write_out,
         output_base_path=args.output_base_path,
         ckpt_path=args.ckpt_path,
+        mlo_layers=args.mlo_layers,
     )
 
     dumped = json.dumps(results, indent=2)
